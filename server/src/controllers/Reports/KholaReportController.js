@@ -14,6 +14,7 @@ KholaReportController.get("/khola/report/vaccination/:id",async (req, res) => {
     const numberOfAnimals=khola.Number;
     const kholaName=khola.KholaName;
     const typeOfAnimal=khola.AnimalType;
+    const breed=khola.Breed;
     const location=khola.Location;
     const created=khola.createdAt;
     //testing
@@ -50,24 +51,59 @@ KholaReportController.get("/khola/report/vaccination/:id",async (req, res) => {
      console.log(`number of months is ${numberOfmonths}`);
 
      vaccines.forEach(element => {
-         if(numberOfmonths<3){
-            const totalDosage=element.Dosage*numberOfAnimals;
-            finalReport.push({
-                "Type":element.TypeOfVaccine,
-                "Age of vaccine(in months)":element.AgeOfVaccination,
-                "Dosage (in ml)":element.Dosage,
-                "Total Dosage(in ml)":totalDosage,
-                "EffectiveAfter":element.EffectiveAfter,
-                "Duration":element.Duration,
-                "Revaccination":element.Revaccination,
-                "Next Vaccination Day":sixMonthsLater,
-                "status":"pending vaccination"
-            });
-         }else if(numberOfmonths>3 && numberOfmonths<6){
-             if(element.AgeOfVaccination===">3 months"){
-                 const totalDosage=element.Dosage*numberOfAnimals;
+         if(typeOfAnimal==="Cattle" || typeOfAnimal==="cattle"){
+            if(numberOfmonths<3){
+                const totalDosage=element.Dosage*numberOfAnimals;
                 finalReport.push({
                     "Type":element.TypeOfVaccine,
+                    "Breed":element.Breed,
+                    "Age of vaccine(in months)":element.AgeOfVaccination,
+                    "Dosage (in ml)":element.Dosage,
+                    "Total Dosage(in ml)":totalDosage,
+                    "EffectiveAfter":element.EffectiveAfter,
+                    "Duration":element.Duration,
+                    "Revaccination":element.Revaccination,
+                    "Next Vaccination Day":sixMonthsLater,
+                    "status":"pending vaccination"
+        
+                });
+             }else if(numberOfmonths>3 && numberOfmonths<6){
+                 if(element.AgeOfVaccination===">3 months"){
+                     const totalDosage=element.Dosage*numberOfAnimals;
+                    finalReport.push({
+                        "Type":element.TypeOfVaccine,
+                        "Breed":element.Breed,
+                        "Age of vaccine(in months)":element.AgeOfVaccination,
+                        "Dosage (in ml)":element.Dosage,
+                        "Total Dosage(in ml)":totalDosage,
+                        "EffectiveAfter":element.EffectiveAfter,
+                        "Duration":element.Duration,
+                        "Revaccination":element.Revaccination,
+                        "Next Vaccination Day":sixMonthsLater,
+                        "status":"Missing vaccination"
+                    });
+                 }
+                 if(element.AgeOfVaccination===">6 months"){
+                    const totalDosage=element.Dosage*numberOfAnimals;
+                    finalReport.push({
+                        "Type":element.TypeOfVaccine,
+                        "Breed":element.Breed,
+                        "Age of vaccine(in months)":element.AgeOfVaccination,
+                        "Dosage (in ml)":element.Dosage,
+                        "Total Dosage(in ml)":totalDosage,
+                        "EffectiveAfter":element.EffectiveAfter,
+                        "Duration":element.Duration,
+                        "Revaccination":element.Revaccination,
+                        "Next Vaccination Day":sixMonthsLater,
+                        "status":"pending vaccination"
+                    });
+                 }
+    
+             }else{
+                const totalDosage=element.Dosage*numberOfAnimals;
+                finalReport.push({
+                    "Type":element.TypeOfVaccine,
+                    "Breed":element.Breed,
                     "Age of vaccine(in months)":element.AgeOfVaccination,
                     "Dosage (in ml)":element.Dosage,
                     "Total Dosage(in ml)":totalDosage,
@@ -77,23 +113,9 @@ KholaReportController.get("/khola/report/vaccination/:id",async (req, res) => {
                     "Next Vaccination Day":sixMonthsLater,
                     "status":"Missing vaccination"
                 });
+               
              }
-             if(element.AgeOfVaccination===">6 months"){
-                const totalDosage=element.Dosage*numberOfAnimals;
-                finalReport.push({
-                    "Type":element.TypeOfVaccine,
-                    "Age of vaccine(in months)":element.AgeOfVaccination,
-                    "Dosage (in ml)":element.Dosage,
-                    "Total Dosage(in ml)":totalDosage,
-                    "EffectiveAfter":element.EffectiveAfter,
-                    "Duration":element.Duration,
-                    "Revaccination":element.Revaccination,
-                    "Next Vaccination Day":sixMonthsLater,
-                    "status":"pending vaccination"
-                });
-             }
-
-         }else{
+         }else if(typeOfAnimal==="Pigs" || typeOfAnimal==="pigs" || ypeOfAnimal==="PIGS"){
             const totalDosage=element.Dosage*numberOfAnimals;
             finalReport.push({
                 "Type":element.TypeOfVaccine,
@@ -105,9 +127,8 @@ KholaReportController.get("/khola/report/vaccination/:id",async (req, res) => {
                 "Revaccination":element.Revaccination,
                 "Next Vaccination Day":sixMonthsLater,
                 "status":"Missing vaccination"
-            });
-           
-         }
+         });
+        }
         
      });
  console.log(`length of report array ${finalReport.length}`);

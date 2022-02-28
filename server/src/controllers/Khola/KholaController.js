@@ -53,20 +53,21 @@ KholaController.post("/khola/create/:id",validateToken, async (req, res) => {
 //populate  vaccine data
 
  vaccines.map((element) => {
+
   const populated= Vaccination.findOne({where:{id:element.id}});
+
 if(populated){
- console.log("vaccine information already populated");
-}else if(!populated){
+ 
+}else{
   Vaccination.create(element);
 }
-  
 });
 
 
  const id=req.params.id;
-  const {KholaName,Location,AnimalType,Number}=req.body;
+  const {KholaName,Location,AnimalType,Breed,Number}=req.body;
     const khola = req.body;
-    const duplicate=await Kholas.findOne({where:{KholaName:KholaName,Location:Location,AnimalType:AnimalType,Number:Number,UserId:id}})
+    const duplicate=await Kholas.findOne({where:{KholaName:KholaName,Location:Location,AnimalType:AnimalType,Breed:Breed,Number:Number,UserId:id}})
   // UserLivestock.username = req.user.username;
   if(duplicate){
     return res.status(406).json("duplicates are not allowed")

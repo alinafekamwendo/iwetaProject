@@ -9,6 +9,10 @@ module.exports = (sequelize, DataTypes) => {
         type:DataTypes.STRING,
         allowNull:false,
       },
+      Breed:{
+        type:DataTypes.STRING,
+        allowNull:false,
+      },
       AgeOfVaccination:{
         type:DataTypes.STRING,
         allowNull:false,

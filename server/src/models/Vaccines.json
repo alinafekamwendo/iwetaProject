@@ -3,6 +3,7 @@
 {  
     "id":1,
     "TypeOfVaccine":"Anthrax",
+    "Breed":"Dairy",
     "AgeOfVaccination":">3 months",
     "Dosage":1,
     "EffectiveAfter":10,
@@ -13,6 +14,7 @@
 {
     "id":2,
     "TypeOfVaccine":"Black Leg",
+    "Breed":"Dairy",
     "AgeOfVaccination":">3 months",
     "Dosage":2,
     "EffectiveAfter":10,
@@ -23,6 +25,7 @@
 {  
     "id":3, 
     "TypeOfVaccine":"B.Pasteurollosis",
+    "Breed":"Dairy",
     "AgeOfVaccination":">3 months",
     "Dosage":2,
     "EffectiveAfter":10,
@@ -32,6 +35,7 @@
 
 {    "id":4,
     "TypeOfVaccine":"CBPP",
+    "Breed":"Dairy",
     "AgeOfVaccination":">6 months",
     "Dosage":1,
     "EffectiveAfter":14,
@@ -42,6 +46,7 @@
 {  
     "id":5,
     "TypeOfVaccine":"FMD",
+    "Breed":"Dairy",
     "AgeOfVaccination":">6 months",
     "Dosage":4,
     "EffectiveAfter":14,

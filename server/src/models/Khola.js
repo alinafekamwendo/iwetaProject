@@ -13,6 +13,10 @@ module.exports = (sequelize, DataTypes) => {
       type :DataTypes.STRING,
       allowNull:false,
     },
+    Breed:{
+      type :DataTypes.STRING,
+      allowNull:false,
+    },
     Number: {
       type: DataTypes.BIGINT,
       allowNull: false,
