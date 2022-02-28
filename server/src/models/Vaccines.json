@@ -1,0 +1,52 @@
+[
+
+{  
+    "id":1,
+    "TypeOfVaccine":"Anthrax",
+    "AgeOfVaccination":">3 months",
+    "Dosage":1,
+    "EffectiveAfter":10,
+    "Duration":"1 year",
+    "Revaccination":"Every 1 year"
+},
+ 
+{
+    "id":2,
+    "TypeOfVaccine":"Black Leg",
+    "AgeOfVaccination":">3 months",
+    "Dosage":2,
+    "EffectiveAfter":10,
+    "Duration":"1 year",
+    "Revaccination":"Every 1 year"
+},
+
+{  
+    "id":3, 
+    "TypeOfVaccine":"B.Pasteurollosis",
+    "AgeOfVaccination":">3 months",
+    "Dosage":2,
+    "EffectiveAfter":10,
+    "Duration":"6-8 months",
+    "Revaccination":"Every 1 year"
+},
+
+{    "id":4,
+    "TypeOfVaccine":"CBPP",
+    "AgeOfVaccination":">6 months",
+    "Dosage":1,
+    "EffectiveAfter":14,
+    "Duration":"1 year",
+    "Revaccination":"Every 1 year"
+},
+
+{  
+    "id":5,
+    "TypeOfVaccine":"FMD",
+    "AgeOfVaccination":">6 months",
+    "Dosage":4,
+    "EffectiveAfter":14,
+    "Duration":"1 year",
+    "Revaccination":"Every 1 year"
+}
+
+  ]
