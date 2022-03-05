@@ -5,14 +5,14 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 //For barchart
 
-const BarChart=()=>{
+const KholaCharts=()=>{
 
 var KholaId = localStorage.getItem('KholaId');
 console.log(`khola id is ${KholaId}`);
 const [chart,setChart]=useState([])
 //this is by each khola
-//var baseUrl=`http://localhost:3001/api/khola/livestock/Report/${KholaId}`
-var baseUrl="http://localhost:3001/api/khola/livestock/Report"
+var baseUrl=`http://localhost:3001/api/khola/livestock/Report/${KholaId}`
+// var baseUrl="http://localhost:3001/api/khola/livestock/Report"
 //var proxyUrl='https://cors-anywhere.herokuapp.com/'
 
 useEffect(()=>{
@@ -59,7 +59,7 @@ var data={
     }
     var options={
         responsive: true,
-        maintainAspectRatio: true,
+        maintainAspectRatio: false,
         scales: {
             y: {
                 beginAtZero: true
@@ -75,8 +75,8 @@ var data={
         <div>
            <Pie
            data={data}
-           height={400}
-           width={1000}
+        //   height={"40%"}
+           width={"50%"}
            options={options}
            />
 
@@ -84,6 +84,6 @@ var data={
     )
 
 }
-export default BarChart
+export default KholaCharts;
 
 

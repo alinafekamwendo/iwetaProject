@@ -9,9 +9,12 @@ const logger = require('morgan');
 const dotenv=require("dotenv").config();
 app.use(express.json());
 app.use(cors());
+//vaccinate
+const {VaccinationData:Vaccination,Khola: Kholas } = require("./src/models");
+const vaccines=require("./src/models/Vaccines.json");
 app.use(logger('dev'))
-//app.use(bodyPrser.json());
-//app.use(bodyPrser.urlencoded({extended:true}))
+//socket
+
 app.use(express.urlencoded({extended:true}));
 
 
@@ -36,6 +39,13 @@ app.use("/",userLivestock);
 app.use("/api/livestock",livestockRouter);
 const kholaRoute=require("./src/routes/Khola");
 app.use("/",kholaRoute);
+//notifications
+const pushNotifications=require("./src/routes/PushNotificationsRoute");
+app.use("/notifications",pushNotifications);
+
+//ussd
+const ussd=require("./src/routes/Ussd");
+app.use("/",ussd);
 
 //for khola report
 //whole route is localhost:3001/khola/report/vaccination/:id
@@ -43,14 +53,52 @@ app.use("/",kholaRoute);
 const kholaReports=require("./src/routes/Reports");
 app.use("/",kholaReports);
 
-//USSD SESSIONS
-const {Users,Khola}=require("./src/models");
+// ...
+
+// Schedule tasks to be run on the server.no
+
+
 app.get('/',(req,res)=>{
 
-  res.send(dairy);
+  res.send("IWETA SERVER RUNNING");
 });
 
+//populate vaccines
+const populate=async()=>{
+try {
+  vaccines.map((element) => {
 
+    const populated= Vaccination.findAll({where:{id:element.id}});
+  if(!populated){
+    console.log("already populated");
+    Vaccination.update(element);
+    console.log("updated succesfully");
+  }else{
+    Vaccination.create(element);
+  }
+  });
+} catch (error) {
+  
+}
+}
+
+
+
+//
+// app.use('*',(req,res,next)=>{
+//   const error=new Error(`Not Found ${req.baseUrl}`);
+//   error.status=404;
+//   next(error);
+// });
+
+app.use((error,req,res,next)=>{
+  const statusCode=error.status||500
+  res.status(statusCode).json({
+    message: error.message,
+    stack:error.stack
+  });
+  next(error);
+});
 const   PORT=process.env.PORT||3001;
 db.sequelize.sync().then(() => {
   app.listen(PORT, () => {

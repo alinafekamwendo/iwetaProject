@@ -12,7 +12,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import {  Link } from "react-router-dom";
 import { useParams, useNavigate } from "react-router-dom";
-import RenderKholas from "./RenderKholas/RenderKholas";
+import Chart from './Charts/BarChart';
+//notification
+import Notification from "./notifications/notifications";
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -33,7 +36,7 @@ const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   padding: theme.spacing(1),
   textAlign: 'center',
-  height: '300px',
+  height: '400px',
   color: theme.palette.text.secondary,
 }));
 
@@ -46,7 +49,8 @@ function Home() {
 
   const { authState } = useContext(AuthContext);
   let navigate = useNavigate();
-
+   var listOfKholaNumber = localStorage.getItem("listOfKholaNumber");
+  
   useEffect(() => {
     if (!localStorage.getItem("accessToken")) {
       navigate("/login");
@@ -55,8 +59,6 @@ function Home() {
     }
   }, []);
 
-
- 
   return (
     <div className="home">
      
@@ -82,8 +84,20 @@ function Home() {
         </Grid>
         <Grid item xs={6}>
           <Item>
+            <Chart style={{width: "50", height: "50"}}/>
           {/* <img src={cattlepig} alt="cattlepig pic" style={{ height: "100%", width: "100%"}} className=""/> */}
+          <Notification/>
             </Item>
+        </Grid>
+        <Grid item xs={6}>
+          <Item>xs=4</Item>
+        </Grid>
+        <Grid item xs={6}>
+          <Item>
+          <h2> Number of Your Kholas</h2>
+         <h1> {listOfKholaNumber} </h1>
+         <p> Compared to last month</p>
+          </Item>
         </Grid>
       </Grid>
     </Box>
@@ -92,10 +106,10 @@ function Home() {
       </div>
  {/* bar that is located in the homepage containing search functionality of the kholas */}
       
-  <div className="homesearchContainer">
+  {/* <div className="homesearchContainer">
 
       <RenderKholas/>
-    </div>
+    </div> */}
     </div>
   );
 }

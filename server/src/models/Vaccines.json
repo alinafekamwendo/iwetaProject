@@ -4,10 +4,10 @@
     "id":1,
     "TypeOfVaccine":"Anthrax",
     "Breed":"Dairy",
-    "AgeOfVaccination":">3 months",
+    "AgeOfVaccination":">3",
     "Dosage":1,
     "EffectiveAfter":10,
-    "Duration":"1 year",
+    "Duration": "12",
     "Revaccination":"Every 1 year"
 },
  
@@ -15,10 +15,10 @@
     "id":2,
     "TypeOfVaccine":"Black Leg",
     "Breed":"Dairy",
-    "AgeOfVaccination":">3 months",
+    "AgeOfVaccination":">3",
     "Dosage":2,
     "EffectiveAfter":10,
-    "Duration":"1 year",
+    "Duration":"12",
     "Revaccination":"Every 1 year"
 },
 
@@ -26,20 +26,20 @@
     "id":3, 
     "TypeOfVaccine":"B.Pasteurollosis",
     "Breed":"Dairy",
-    "AgeOfVaccination":">3 months",
+    "AgeOfVaccination":">3",
     "Dosage":2,
     "EffectiveAfter":10,
-    "Duration":"6-8 months",
+    "Duration":"6-8",
     "Revaccination":"Every 1 year"
 },
 
 {    "id":4,
     "TypeOfVaccine":"CBPP",
     "Breed":"Dairy",
-    "AgeOfVaccination":">6 months",
+    "AgeOfVaccination":">6",
     "Dosage":1,
     "EffectiveAfter":14,
-    "Duration":"1 year",
+    "Duration":"12",
     "Revaccination":"Every 1 year"
 },
 
@@ -47,10 +47,10 @@
     "id":5,
     "TypeOfVaccine":"FMD",
     "Breed":"Dairy",
-    "AgeOfVaccination":">6 months",
+    "AgeOfVaccination":">6",
     "Dosage":4,
     "EffectiveAfter":14,
-    "Duration":"1 year",
+    "Duration":"12",
     "Revaccination":"Every 1 year"
 }
 

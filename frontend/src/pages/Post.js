@@ -102,6 +102,7 @@ function Post() {
         navigate("/forum");
       });
   };
+
   return (
     <div className="postPage">
       <div className="postlayout">

@@ -52,11 +52,12 @@ function ListBreedsTable() {
   var columns = [
     {title: "id", field: "id", hidden: true},
     {title: "Avatar", render: rowData => <Avatar maxInitials={1} size={40} round={true} name={rowData === undefined ? " " : rowData.Name} />  },
-    {title: "IdentityNumber", field: "IdentityNumber"},
+    {title: "Name", field: "Name"},
     {title: "Type", field: "type"},
     {title: "Breed", field: "Breed"},
     {title: "Vaccination", field: "Vaccinated"}
   ]
+  
   const [data, setData] = useState([]); //table data
   const userlivestockNumber = data.length
   localStorage.setItem("userlivestockNumber", userlivestockNumber);
@@ -69,6 +70,7 @@ function ListBreedsTable() {
     var KholaId = localStorage.getItem('KholaId');
     await api.get(`/api/khola/livestock/byId/${KholaId}`).then(Response=>{
       setData(Response.data);
+      console.log(Response.data);
     })
   };
 
@@ -79,8 +81,8 @@ function ListBreedsTable() {
   const handleRowUpdate = (newData, oldData, resolve) => {
     //validation
     let errorList = []
-    if(newData.IdentityNumber === ""){
-      errorList.push("Please enter animal identity number")
+    if(newData.Name === ""){
+      errorList.push("Please enter Name")
     }
     if(newData.type === ""){
       errorList.push("Please enter Type")
@@ -123,8 +125,8 @@ function ListBreedsTable() {
     let errorList = []
     
 
-    if(newData.IdentityNumber === ""){
-      errorList.push("Please enter animal Identity")
+    if(newData.Name === ""){
+      errorList.push("Please enter Name")
     }
     if(newData.type === ""){
       errorList.push("Please enter Type")

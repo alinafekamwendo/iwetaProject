@@ -1,10 +1,48 @@
 const express = require("express");
 const KholaReportController = express.Router();
+const nodeCron=require('node-cron');
+const wbm = require('wbm');
+
 const { Khola: Kholas,VaccinationData:VaccinationData } = require("../../models");
 const { validateToken } = require("../../../middlewares/AuthMiddleware");
 
+//whatsapp
+KholaReportController.post('/sms',(req,res,next)=>{
+
+const credentials = {
+    apiKey: 'ec38a853dda95e8ee89bf5fe4cfc511af2d404a054c2e0ed8f0a4c88755773f0',         // use your sandbox app API key for development in the test environment
+    username: 'iweta',      // use 'sandbox' for development in the test environment
+};
+const Africastalking = require('africastalking')(credentials);
+
+try {
+    const sms = Africastalking.SMS
+// Use the service
+const options = {
+    to: ['+265993925060'],
+    message: "hello v"
+}
+
+// Send message and capture the response or error
+sms.send(options)
+    .then( response => {
+        console.log(response);
+        res.status(200).json(response);
+    })
+    .catch( error => {
+        console.log(error);
+    });
+    
+} catch (error) {
+    next(error);
+}
+// Initialize a service e.g. SMS
+
+});
 //generating report
-KholaReportController.get("/khola/report/vaccination/:id",async (req, res) => {
+KholaReportController.get("/khola/report/vaccination/:id",async (req, res,next) => {
+    try {
+   
     const kholaId=req.params.id;
 
     //derived variables
@@ -13,8 +51,10 @@ KholaReportController.get("/khola/report/vaccination/:id",async (req, res) => {
     //variables
     const numberOfAnimals=khola.Number;
     const kholaName=khola.KholaName;
-    const typeOfAnimal=khola.AnimalType;
-    const breed=khola.Breed;
+    const type=khola.AnimalType;
+    const typeOfAnimal=type.toLowerCase();
+    const anaimalBreed=khola.Breed;
+    const breed=anaimalBreed.toLowerCase();
     const location=khola.Location;
     const created=khola.createdAt;
     //testing
@@ -31,7 +71,22 @@ KholaReportController.get("/khola/report/vaccination/:id",async (req, res) => {
     //six months later
     var sixMonthsLater = new Date();
             sixMonthsLater.setMonth(sixMonthsLater.getMonth() + 3);
-    //console.log(new Date());
+    //formatting
+    function padTo2Digits(num) {
+        return num.toString().padStart(2, '0');
+      }
+      
+      function formatDate(date) {
+        return [
+          padTo2Digits(date.getDate()),
+          padTo2Digits(date.getMonth() + 1),
+          date.getFullYear(),
+        ].join('/');
+      }
+      
+      // 👇️ 24/10/2021 (mm/dd/yyyy)
+     const sixthMoth=formatDate(sixMonthsLater);
+
 
        //function to return number of months collapsed
  function getNumberOfMonths(start, end) {
@@ -51,51 +106,51 @@ KholaReportController.get("/khola/report/vaccination/:id",async (req, res) => {
      console.log(`number of months is ${numberOfmonths}`);
 
      vaccines.forEach(element => {
-         if(typeOfAnimal==="Cattle" || typeOfAnimal==="cattle"){
+         if(typeOfAnimal==="cattle"){
             if(numberOfmonths<3){
                 const totalDosage=element.Dosage*numberOfAnimals;
                 finalReport.push({
                     "Type":element.TypeOfVaccine,
                     "Breed":element.Breed,
-                    "Age of vaccine(in months)":element.AgeOfVaccination,
-                    "Dosage (in ml)":element.Dosage,
-                    "Total Dosage(in ml)":totalDosage,
+                    "Ageofvaccine":element.AgeOfVaccination,
+                    "Dosage":element.Dosage,
+                    "Total_Dosage":totalDosage,
                     "EffectiveAfter":element.EffectiveAfter,
                     "Duration":element.Duration,
                     "Revaccination":element.Revaccination,
-                    "Next Vaccination Day":sixMonthsLater,
-                    "status":"pending vaccination"
+                    "Next_Vaccination_Day":sixthMoth,
+                    "status":"pending"
         
                 });
              }else if(numberOfmonths>3 && numberOfmonths<6){
-                 if(element.AgeOfVaccination===">3 months"){
+                 if(element.AgeOfVaccination===">3"){
                      const totalDosage=element.Dosage*numberOfAnimals;
                     finalReport.push({
                         "Type":element.TypeOfVaccine,
                         "Breed":element.Breed,
-                        "Age of vaccine(in months)":element.AgeOfVaccination,
-                        "Dosage (in ml)":element.Dosage,
-                        "Total Dosage(in ml)":totalDosage,
+                        "Ageofvaccine":element.AgeOfVaccination,
+                        "Dosage":element.Dosage,
+                        "Total_Dosage":totalDosage,
                         "EffectiveAfter":element.EffectiveAfter,
                         "Duration":element.Duration,
                         "Revaccination":element.Revaccination,
-                        "Next Vaccination Day":sixMonthsLater,
+                        "Next_Vaccination_Day":sixthMoth,
                         "status":"Missing vaccination"
                     });
                  }
-                 if(element.AgeOfVaccination===">6 months"){
+                 if(element.AgeOfVaccination===">6"){
                     const totalDosage=element.Dosage*numberOfAnimals;
                     finalReport.push({
                         "Type":element.TypeOfVaccine,
                         "Breed":element.Breed,
-                        "Age of vaccine(in months)":element.AgeOfVaccination,
-                        "Dosage (in ml)":element.Dosage,
-                        "Total Dosage(in ml)":totalDosage,
+                        "Ageofvaccine":element.AgeOfVaccination,
+                        "Dosage":element.Dosage,
+                        "Total_Dosage":totalDosage,
                         "EffectiveAfter":element.EffectiveAfter,
                         "Duration":element.Duration,
                         "Revaccination":element.Revaccination,
-                        "Next Vaccination Day":sixMonthsLater,
-                        "status":"pending vaccination"
+                        "Next_Vaccination_Day":sixthMoth,
+                        "status":"pending"
                     });
                  }
     
@@ -104,36 +159,50 @@ KholaReportController.get("/khola/report/vaccination/:id",async (req, res) => {
                 finalReport.push({
                     "Type":element.TypeOfVaccine,
                     "Breed":element.Breed,
-                    "Age of vaccine(in months)":element.AgeOfVaccination,
-                    "Dosage (in ml)":element.Dosage,
-                    "Total Dosage(in ml)":totalDosage,
+                    "Ageofvaccine":element.AgeOfVaccination,
+                    "Dosage":element.Dosage,
+                    "Total_Dosage":totalDosage,
                     "EffectiveAfter":element.EffectiveAfter,
                     "Duration":element.Duration,
                     "Revaccination":element.Revaccination,
-                    "Next Vaccination Day":sixMonthsLater,
-                    "status":"Missing vaccination"
+                    "Next_Vaccination_Day":sixthMoth,
+                    "status":"Missing"
                 });
                
              }
-         }else if(typeOfAnimal==="Pigs" || typeOfAnimal==="pigs" || ypeOfAnimal==="PIGS"){
+         }else if(typeOfAnimal==="pig"){
             const totalDosage=element.Dosage*numberOfAnimals;
             finalReport.push({
                 "Type":element.TypeOfVaccine,
-                "Age of vaccine(in months)":element.AgeOfVaccination,
-                "Dosage (in ml)":element.Dosage,
-                "Total Dosage(in ml)":totalDosage,
+                "Breed":"Pigs",
+                "Ageofvaccine":element.AgeOfVaccination,
+                "Dosage":element.Dosage,
+                "Total_Dosage":totalDosage,
                 "EffectiveAfter":element.EffectiveAfter,
                 "Duration":element.Duration,
                 "Revaccination":element.Revaccination,
-                "Next Vaccination Day":sixMonthsLater,
-                "status":"Missing vaccination"
+                "Next_Vaccination_Day":sixthMoth,
+                "status":"Missing"
          });
         }
         
      });
- console.log(`length of report array ${finalReport.length}`);
- console.log("The entire report is",finalReport)
-     res.status(200).json({list:finalReport});
+ 
+     res.status(200).json(finalReport);
+     //whatsapp
+
+          
+    } catch (error) {
+        next(error);
+    }
+  });
+
+  nodeCron.schedule('* * * * *', function() {
+    var c = new TMClient('username', 'C7XDKZOQZo6HvhJwtUw0MBcslfqwtp4');
+    c.Messages.send({text: 'test message', phones:'9990001'}, function(err, res){
+        console.log('Messages.send()', err, res);
+    });
+    console.log('running a task every SECOND');
   });
   
 module.exports = KholaReportController;

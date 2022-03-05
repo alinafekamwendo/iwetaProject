@@ -7,7 +7,6 @@ import R from '../image/IMG-20220120-WA0010.png';
 import User from '../image/login.jpg';
 import Input from '@mui/material/Input';
 import { SearchOutlined } from '@material-ui/icons';
-import Loader from 'react-loader-spinner';
 
 
 function Login() {
@@ -26,7 +25,7 @@ function Login() {
   const login = () => {
     const data = { username: username, password: password };
     console.log(data);
-   axios.post("http://localhost:3001/auth/login", data).then((response) => {
+    axios.post("http://localhost:3001/auth/login", data).then((response) => {
       if (response.data.error) {
         alert(response.data.error);
       } else {

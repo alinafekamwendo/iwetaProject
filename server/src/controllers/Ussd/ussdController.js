@@ -17,7 +17,8 @@ ussd.use(logger('dev'))
 //app.use(bodyPrser.urlencoded({extended:true}))
 ussd.use(express.urlencoded({extended:true}));
 
-ussd.post('*', (req, res) => {
+ussd.post('*', (req, res,next) => {
+  try {
     let {sessionId, serviceCode, phoneNumber, text} = req.body
     if (text == '') {
       console.log(req.body);
@@ -67,6 +68,10 @@ ussd.post('*', (req, res) => {
      // console.log(text);
       res.status(400).send('Bad request!')
     }
+  } catch (error) {
+    next(error);
+  }
+   
   })
 
   export default ussd;
