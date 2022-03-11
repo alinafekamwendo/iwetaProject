@@ -3,6 +3,7 @@ const registerRouter = express.Router();
 const { Users ,Category:Categories} = require("../../models");
 const bcrypt = require("bcrypt");
 const { validateToken } = require("../../../middlewares/AuthMiddleware");
+const {validateRole}=require("../../../middlewares/RoleMiddleware");
 const { sign } = require("jsonwebtoken");
 
 
@@ -18,25 +19,26 @@ registerRouter.get("/auth/user", validateToken, (req, res,next) => {
     
   });
 
-registerRouter.post("/auth/register", async (req, res,next) => {
+registerRouter.post("/auth/register",async (req, res,next) => {
+
   try {
-    const { username,email,role,password } = req.body;
+      const { username,email,role,password } = req.body;
 
-  const duplicaterUser = await Users.findOne({ where: { username: username ,email:email} });
-
-  if(duplicaterUser) {
-    console.log("user already registered");
-    return res.status(409).json("user already registered");}
-  
-  bcrypt.hash(password, 10).then((hash) => {
-    Users.create({
-      username: username,
-      email:email,
-      role:role,
-      password:hash,
-    });
-    res.status(200).json("user registred succesfully");
-  });
+      const duplicaterUser = await Users.findOne({ where: { username: username ,email:email} });
+    
+      if(duplicaterUser) {
+        console.log("user already registered");
+        return res.status(409).json("user already registered");}
+      
+      bcrypt.hash(password, 10).then((hash) => {
+        Users.create({
+          username: username,
+          email:email,
+          role:role,
+          password:hash,
+        });
+        res.status(200).json("user registred succesfully");
+      });
 
   } catch (error) {
     next(error);

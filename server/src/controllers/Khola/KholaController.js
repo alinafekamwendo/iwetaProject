@@ -1,16 +1,35 @@
 const express = require("express");
 const KholaController = express.Router();
-const {VaccinationData:Vaccination,Khola: Kholas } = require("../../models");
+const nodeCron=require('node-cron');
+const {CattleVaccinationData,PigsVaccinationData,FeedingData,Khola } = require("../../models");
 const { validateToken } = require("../../../middlewares/AuthMiddleware");
-const vaccines=require("../../models/Vaccines.json")
+const cattleVaccines=require("../../models/CattleVaccines.json");
+const pigsVaccines=require("../../models/PigsVaccines.json");
+const feeding=require("../../models/FeedingRequirementsData.json");
 
 KholaController.get("/khola/All", async (req, res,next) => {
 try {
   
-} catch (error) {
-  const makola = await Kholas.findAll();
+feeding.map((element) => {
+  const id=element.id;
+  const populated= FeedingData.findOne({where:{id:id}});
+if(!populated){
+  FeedingData.create(element);
+  console.log("created");
+}else if(populated){
+FeedingData.destroy({
+  where:{
+    id:id
+  }
+})&&FeedingData.create(element);
+console.log("droped and created");
+}
+});
+const makola = await Khola.findAll();
   res.status(200).json({makola});
 
+} catch (error) {
+  next(error);
 }
 
 });
@@ -18,7 +37,7 @@ try {
  KholaController.get("/khola/ByUserId/:id", async (req, res,next) => {
 try {
   const id = req.params.id;
-  const makolaById = await Kholas.findAll({ where: {UserId: id}});
+  const makolaById = await Khola.findAll({ where: {UserId: id}});
   res.status(200).json(makolaById);
 } catch (error) {
   next(error);
@@ -30,7 +49,7 @@ try {
  KholaController.get("/khola/ById/:id", async (req, res,next) => {
    try {
     const id = req.params.id;
-    const khola=await Kholas.findOne({where:{id:id}});
+    const khola=await Khola.findOne({where:{id:id}});
     if(khola){
      res.status(200).json(khola);
     }else{
@@ -45,9 +64,9 @@ try {
  KholaController.get("/api/khola/livestock/Report/:id", async (req, res,next) => {
    try {
     const id = req.params.id;
-    const vaccinated = await Kholas.findAll({ where: {KholaId: id,Vaccinated:true}});
+    const vaccinated = await Khola.findAll({ where: {KholaId: id,Vaccinated:true}});
    //const vaccinated = await UserLivestocks.findAll({ where: {Vaccinated:true}});
-    const unVaccinated = await Kholas.findAll({ where: {KholaId: id,Vaccinated:false}});
+    const unVaccinated = await Khola.findAll({ where: {KholaId: id,Vaccinated:false}});
    //const unVaccinated = await UserLivestocks.findAll({ where: {Vaccinated:false}});
     const totalVaccinated=vaccinated.length;
     const totalUnvaccinated=unVaccinated.length;
@@ -70,23 +89,55 @@ try {
 
 KholaController.post("/khola/create/:id",validateToken, async (req, res,next) => {
 
-  try {
-    // vaccines.map((element) => {
+  //variables
+   
+  const id=req.params.id;
+  const {KholaName,Location,AnimalType,Breed,Number}=req.body;
+  const animal=AnimalType.toLowerCase();
 
-    //   const populated= Vaccination.findOne({where:{id:element.id}});
-    
-    // if(populated){
-     
-    // }else{
-    //   Vaccination.create(element);
-    // }
+//functions populate  vaccine data
+if(animal==="cattle"){
+
+    cattleVaccines.map((element) => {
+      const id=element.id;
+      const populated= CattleVaccinationData.findAll({where:{id:id}});
+    if(!populated){
+      CattleVaccinationData.destroy(element)&&CattleVaccinationData.create(element);
+      console.log("created");
+    }else if(populated){
+    // CattleVaccinationData.create(element,{
+    //   where:{
+    //     id:id
+    //   }
     // });
-    
-    
-     const id=req.params.id;
-      const {KholaName,Location,AnimalType,Breed,Number}=req.body;
-        const khola = req.body;
-        const duplicate=await Kholas.findOne({where:{KholaName:KholaName,Location:Location,AnimalType:AnimalType,Breed:Breed,Number:Number,UserId:id}})
+    CattleVaccinationData.destroy({where:{
+      id:element.id
+    }})&&CattleVaccinationData.create(element);
+    console.log("updated");
+  }
+  });
+
+}else if(animal==="pig"){
+    pigsVaccines.map((element) => {
+      const id=element.id;
+      const populated= PigsVaccinationData.findAll({where:{id:id}});
+    if(!populated){
+      PigsVaccinationData.destroy({where:{
+        id:element.id
+      }})&&PigsVaccinationData.create(element);
+      console.log("created");
+    }else if(populated){
+    PigsVaccinationData.destroy({where:{
+      id:element.id
+    }})&&PigsVaccinationData.create(element);
+    console.log("updated");
+  }
+  });
+};
+ 
+const khola = req.body;
+  try{
+        const duplicate=await Khola.findOne({where:{KholaName:KholaName,Location:Location,AnimalType:AnimalType,Breed:Breed,Number:Number,UserId:id}})
       // UserLivestock.username = req.user.username;
       if(duplicate){
         return res.status(406).json("duplicates are not allowed")
@@ -95,8 +146,26 @@ KholaController.post("/khola/create/:id",validateToken, async (req, res,next) =>
       try {
         khola.username=req.user.username;
         khola.UserId=id;
-             await Kholas.create(khola);
+             await Khola.create(khola);
       res.status(200).json(khola);
+      
+//the following twilio sends sms as a comfirmation of khola created
+// //sms code starts here
+//    var sid='ACe6aff94eb17d3c3e10ec611cbac73eb2';
+//   var authToken='1fc1e20ea8b7b558bafd83837708489d';
+//   var twilio=require('twilio')(sid,authToken);
+//   twilio.messages
+//   .create({
+//     from:'+17622139696',
+//     to: '+265993925060',
+//     body: `You have succesfully created khola.Name: ${KholaName},
+//      Type: ${AnimalType}, 
+//      Total Animals: ${Number}`,
+//   })
+//   .then((res)=>{console.log("message sent")})
+//   .catch((err)=>{console.log(err)});
+//   //sms code ends here
+ 
       } catch (error) {
         
       }
@@ -104,7 +173,6 @@ KholaController.post("/khola/create/:id",validateToken, async (req, res,next) =>
   } catch (error) {
     next(error);
   }
-//populate  vaccine data
 
   
 });
@@ -112,10 +180,10 @@ KholaController.post("/khola/create/:id",validateToken, async (req, res,next) =>
 
  KholaController.delete("/khola/delete/:id", async (req, res,next) => {
    try {
-    const livestockID = req.params.id;
-    await Kholas.destroy({
+    const kholaId = req.params.id;
+    await Khola.destroy({
       where: {
-        id:livestockID,
+        id:kholaId,
       },
     });
     res.status(200).json("DELETED SUCCESSFULLY");
@@ -130,7 +198,7 @@ KholaController.put("/khola/update/:id", async (req, res,next) => {
 try {
   const id = req.params.id;
   
-  await Kholas.update(req.body,{
+  await Khola.update(req.body,{
     where: {
       id:id,
     },
@@ -141,5 +209,15 @@ next(error);
 }
 
 });
+
+  // nodeCron.schedule('* * * * *', function() {
+  //   try {
+   
+  //   console.log('running a task every SECOND');
+  // } catch (error) {
+  //   res.send(500).json({error:error.message});
+  // }  
+  // });
+
 
 module.exports = KholaController;

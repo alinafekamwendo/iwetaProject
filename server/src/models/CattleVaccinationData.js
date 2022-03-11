@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-    const VaccinationData = sequelize.define("VaccinationData", {
+    const CattleVaccinationData = sequelize.define("CattleVaccinationData", {
         id:{
             type: DataTypes.BIGINT,
             allowNull: false,
@@ -34,6 +34,6 @@ module.exports = (sequelize, DataTypes) => {
         allowNull:false,
       },
     });
-    return VaccinationData;
+    return CattleVaccinationData;
   };
   

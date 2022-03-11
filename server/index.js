@@ -10,8 +10,7 @@ const dotenv=require("dotenv").config();
 app.use(express.json());
 app.use(cors());
 //vaccinate
-const {VaccinationData:Vaccination,Khola: Kholas } = require("./src/models");
-const vaccines=require("./src/models/Vaccines.json");
+
 app.use(logger('dev'))
 //socket
 
@@ -64,26 +63,6 @@ app.get('/',(req,res)=>{
 });
 
 //populate vaccines
-const populate=async()=>{
-try {
-  vaccines.map((element) => {
-
-    const populated= Vaccination.findAll({where:{id:element.id}});
-  if(!populated){
-    console.log("already populated");
-    Vaccination.update(element);
-    console.log("updated succesfully");
-  }else{
-    Vaccination.create(element);
-  }
-  });
-} catch (error) {
-  
-}
-}
-
-
-
 //
 // app.use('*',(req,res,next)=>{
 //   const error=new Error(`Not Found ${req.baseUrl}`);

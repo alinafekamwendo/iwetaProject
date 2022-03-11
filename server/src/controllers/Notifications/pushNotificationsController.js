@@ -6,43 +6,55 @@ const { Server } = require("socket.io");
 
 
 //socket
-const io = new Server({ 
-  
-  cors:{
-    origin:"http://localhost:3000"
-  }
-  
-   });
 
-   let onlineUsers=[];
-   const addNewUser=(username,socketId)=>{
-     !onlineUsers.some((user)=>user.username===username)&&
-     onlineUsers.push({username,socketId});
-   };
+const io = new Server({
+  cors: {
+    origin: "http://localhost:3000",
+  },
+});
 
-   const removeUser=(socketId)=>{
-     onlineUsers=onlineUsers.filter((user)=>user.socketId !==socketId);
-   };
+let onlineUsers = [];
 
-   const getUser=(username)=>{
-     return onlineUsers.find((user)=>user.username===username);
-   };
+const addNewUser = (username, socketId) => {
+  !onlineUsers.some((user) => user.username === username) &&
+    onlineUsers.push({ username, socketId });
+};
+
+const removeUser = (socketId) => {
+  onlineUsers = onlineUsers.filter((user) => user.socketId !== socketId);
+};
+
+const getUser = (username) => {
+  return onlineUsers.find((user) => user.username === username);
+};
 
 io.on("connection", (socket) => {
-    socket.on("newUser",(username)=>{
-      addNewUser(username,socket.id);
+  socket.on("newUser", (username) => {
+    addNewUser(username, socket.id);
+  });
+
+  socket.on("sendNotification", ({ senderName, receiverName, type }) => {
+    const receiver = getUser(receiverName);
+    console.log("invoked");
+    io.to(receiver.socketId).emit("getNotification", {
+      senderName,
+      type,
     });
-      console.log("connected to io");
-      io.emit("firstEvent","hello notification");
+  });
 
-        socket.on("disconnect",()=>{
-          removeUser(socket.id);
-          console.log("someone has left");
+  socket.on("sendText", ({ senderName, receiverName, text }) => {
+    const receiver = getUser(receiverName);
+    io.to(receiver.socketId).emit("getText", {
+      senderName,
+      text,
+    });
+  });
 
-        });
-        socket.broadcast.emit("notify everyone");
-        });
-     
+  socket.on("disconnect", () => {
+    removeUser(socket.id);
+  });
+});
+
 io.listen(3002)
 KholaReportController.get("/",(req,res,next)=>{
     try {

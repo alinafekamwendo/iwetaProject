@@ -32,7 +32,6 @@ import UpDateKhola from "./pages/createKhola/UpDateKhola";
 import KholaPage from "./pages/KholaPage/KholaPage";
 
 
-
 const useStyles = makeStyles((theme) => ({
   root: {
     '& > *': {

@@ -1,6 +1,10 @@
 module.exports = (sequelize, DataTypes) => {
-  const Users = sequelize.define("Users", {
-    username: {
+  const Consultants = sequelize.define("Consultants", {
+  FirstName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    Surname: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -8,7 +12,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    role: {
+    district: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    station: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -20,22 +28,21 @@ module.exports = (sequelize, DataTypes) => {
 });
 
 
-  Users.associate = (models) => {
-    Users.hasMany(models.Likes, {
+  Consultants.associate = (models) => {
+    Consultants.hasMany(models.Likes, {
       onDelete: "cascade",
     });
-    Users.hasMany(models.Posts, {
+    Consultants.hasMany(models.Posts, {
       onDelete: "cascade",
     });
-    Users.hasMany(models.Khola, {
+    Consultants.hasMany(models.Khola, {
       onDelete: "cascade",
     });
- 
-    Users.hasMany(models.Livestock,{
+    Consultants.hasMany(models.Livestock,{
       onDelete:"cascade",
     });
   
   };
 
-  return Users;
+  return Consultants;
 };

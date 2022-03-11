@@ -72,13 +72,13 @@ export default function SpecificKhola(props) {
 
   //for generating reports into our application
 
- useEffect(() => {
-  var KholaId = localStorage.getItem('KholaId');
-    axios.get(`http://localhost:3001/khola/report/vaccination/${KholaId}`).then((response) => {
-      setFinalReport(response.data);
-      console.log(response.data)
-    });
-  }, []);
+//  useEffect(() => {
+//   var KholaId = localStorage.getItem('KholaId');
+//     axios.get(`http://localhost:3001/khola/report/vaccination/${KholaId}`).then((response) => {
+//       setFinalReport(response.data);
+//       console.log(response.data)
+//     });
+//   }, []);
 // //deleting the khola
 //   const deleteKhola = () => {
 //     var KholaId = localStorage.getItem('KholaId');
@@ -109,7 +109,6 @@ export default function SpecificKhola(props) {
         </Grid>
         <Grid item xs={9}>
           <Item>
-          <VaccinationTable/>
           <VaccinationTable/>
           </Item>
 

@@ -5,6 +5,7 @@ import "./vaccinationTable.css";
 export default function VaccinationTable() {
 
   const [finalReport, setFinalReport] = useState([]);
+  const [feedingReport,setFeedingReport]=useState([]);
 
   const Button = ({ type }) => {
     return <button className={"widgetLgButton " + type}>{type}</button>;
@@ -17,6 +18,14 @@ export default function VaccinationTable() {
         console.log(response.data)
       });
     }, []);
+
+    useEffect(() => {
+      var KholaId = localStorage.getItem('KholaId');
+        axios.get(`http://localhost:3001/khola/report/feeding/${KholaId}`).then((response) => {
+          setFeedingReport(response.data);
+          console.log(response.data)
+        });
+      }, []);
   
   return (
     <div className="widgetLg">
@@ -42,6 +51,8 @@ export default function VaccinationTable() {
         </tr>
   
  {finalReport.map((value, key) => {
+   const sts=value.status;
+   const isPending=(sts=="pending");
    return (
         <tr key={key} className="widgetLgTr">
           <td className="widgetLgUser">
@@ -55,8 +66,37 @@ export default function VaccinationTable() {
           <td className="widgetLgDate">{value.Next_Vaccination_Day}</td>
           <td className="widgetLgAmount">{value.Duration}</td>
           <td className="widgetLgDate">{value.Revaccination}</td>
-          <td className="widgetLgDate">{value.status}</td>
+          <td className="widgetLgDate" style={{
+             backgroundColor:isPending? "#0ee82f":"#f00511"
+             }}>{value.status}</td>
           
+        </tr>
+   );
+  })}
+      </table>
+      <h3 className="widgetLgTitle">Feeding report</h3>
+      <table className="widgetLgTable">
+        <tr className="widgetLgTr">
+          <th className="widgetLgTh">Age(Weeks)</th>
+          <th className="widgetLgTh">Weight
+          (kgs)</th>
+          <th className="widgetLgTh">Daily 
+          Gaining()</th>
+          <th className="widgetLgTh">Feeding 
+          Consumption(kgs/day)</th>
+          <th className="widgetLgTh">Water
+          Consumption(Ltrs/day)</th>
+        </tr>
+  
+ {feedingReport.map((value, key) => {
+   return (
+        <tr key={key} className="widgetLgTr">
+          <td className="widgetLgDate">{value.Age}</td>
+          <td className="widgetLgAmount">{value.Weight}</td>
+          <td className="widgetLgAmount">{value.DailyGaining}</td>
+          <td className="widgetLgDate">{value.FeedConsumption}</td>
+          <td className="widgetLgDate">{value.WaterConsumption}</td>
+         
         </tr>
    );
   })}
