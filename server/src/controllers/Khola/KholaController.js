@@ -10,23 +10,9 @@ const feeding=require("../../models/FeedingRequirementsData.json");
 KholaController.get("/khola/All", async (req, res,next) => {
 try {
   
-feeding.map((element) => {
-  const id=element.id;
-  const populated= FeedingData.findOne({where:{id:id}});
-if(!populated){
-  FeedingData.create(element);
-  console.log("created");
-}else if(populated){
-FeedingData.destroy({
-  where:{
-    id:id
-  }
-})&&FeedingData.create(element);
-console.log("droped and created");
-}
-});
 const makola = await Khola.findAll();
   res.status(200).json({makola});
+  console.log(makola)
 
 } catch (error) {
   next(error);
@@ -36,6 +22,19 @@ const makola = await Khola.findAll();
 
  KholaController.get("/khola/ByUserId/:id", async (req, res,next) => {
 try {
+  feeding.map((element) => {
+    const id=element.id;
+    const populated= FeedingData.findAll({where:{id:id}});
+  if(!populated){
+    FeedingData.destroy(element)&&FeedingData.create(element);
+    console.log("created");
+  }else if(populated){
+  FeedingData.destroy({where:{
+    id:element.id
+  }})&&FeedingData.create(element);
+  console.log("updated");
+}
+});
   const id = req.params.id;
   const makolaById = await Khola.findAll({ where: {UserId: id}});
   res.status(200).json(makolaById);

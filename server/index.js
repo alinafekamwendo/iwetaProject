@@ -6,10 +6,10 @@ const YAML=require('yamljs');
 const bodyPrser=require('body-parser');
 const swaggerJSDocs=YAML.load("./swagger.yaml");
 const logger = require('morgan');
+const nodeCron=require('node-cron');
 const dotenv=require("dotenv").config();
 app.use(express.json());
 app.use(cors());
-//vaccinate
 
 app.use(logger('dev'))
 //socket
@@ -30,8 +30,8 @@ const usersRouter = require("./src/routes/Users");
 app.use("/", usersRouter);
 const likesRouter = require("./src/routes/Likes");
 app.use("/likes", likesRouter);
-const breedsRouter=require("./src/routes/Breeds");
-app.use("/api/breeds",breedsRouter);
+// const breedsRouter=require("./src/routes/Breeds");
+// app.use("/api/breeds",breedsRouter);
 const livestockRouter=require("./src/routes/Livestock");
 const userLivestock=require("./src/routes/UserLivestockRoute");
 app.use("/",userLivestock);
@@ -41,7 +41,9 @@ app.use("/",kholaRoute);
 //notifications
 const pushNotifications=require("./src/routes/PushNotificationsRoute");
 app.use("/notifications",pushNotifications);
-
+//
+const Products=require("./src/routes/Product");
+app.use('/',Products);
 //ussd
 const ussd=require("./src/routes/Ussd");
 app.use("/",ussd);
@@ -55,20 +57,26 @@ app.use("/",kholaReports);
 // ...
 
 // Schedule tasks to be run on the server.no
-
+//roles
 
 app.get('/',(req,res)=>{
 
   res.send("IWETA SERVER RUNNING");
+  console.log(role);
+  console.log(Roles);
 });
 
-//populate vaccines
-//
-// app.use('*',(req,res,next)=>{
-//   const error=new Error(`Not Found ${req.baseUrl}`);
-//   error.status=404;
-//   next(error);
-// });
+//populate roles
+// nodeCron.schedule('* * * * * *', function() {
+//     try {
+   
+    // console.log('running a task every SECOND');
+  // } catch (error) {
+  //   res.send(500).json({error:error.message});
+  // }  
+  // });
+
+
 
 app.use((error,req,res,next)=>{
   const statusCode=error.status||500
