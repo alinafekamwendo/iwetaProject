@@ -104,11 +104,6 @@ if(animal==="cattle"){
       CattleVaccinationData.destroy(element)&&CattleVaccinationData.create(element);
       console.log("created");
     }else if(populated){
-    // CattleVaccinationData.create(element,{
-    //   where:{
-    //     id:id
-    //   }
-    // });
     CattleVaccinationData.destroy({where:{
       id:element.id
     }})&&CattleVaccinationData.create(element);
@@ -120,12 +115,12 @@ if(animal==="cattle"){
     pigsVaccines.map((element) => {
       const id=element.id;
       const populated= PigsVaccinationData.findAll({where:{id:id}});
-    if(!populated){
+    if(populated){
       PigsVaccinationData.destroy({where:{
         id:element.id
       }})&&PigsVaccinationData.create(element);
       console.log("created");
-    }else if(populated){
+    }else if(!populated){
     PigsVaccinationData.destroy({where:{
       id:element.id
     }})&&PigsVaccinationData.create(element);
