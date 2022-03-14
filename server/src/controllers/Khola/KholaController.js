@@ -6,6 +6,7 @@ const { validateToken } = require("../../../middlewares/AuthMiddleware");
 const cattleVaccines=require("../../models/CattleVaccines.json");
 const pigsVaccines=require("../../models/PigsVaccines.json");
 const feeding=require("../../models/FeedingRequirementsData.json");
+const dotenv=require("dotenv").config();
 
 KholaController.get("/khola/All", async (req, res,next) => {
 try {
@@ -145,8 +146,8 @@ const khola = req.body;
       
 //the following twilio sends sms as a comfirmation of khola created
 // //sms code starts here
-//    var sid='ACe6aff94eb17d3c3e10ec611cbac73eb2';
-//   var authToken='1fc1e20ea8b7b558bafd83837708489d';
+// var sid=process.env.SID;
+//  var authToken=process.env.AUTH_TOKEN;
 //   var twilio=require('twilio')(sid,authToken);
 //   twilio.messages
 //   .create({
