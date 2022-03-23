@@ -70,6 +70,7 @@ KholaReportController.get("/khola/report/vaccination/:id",async (req, res,next) 
     const breed=anaimalBreed.toLowerCase();
     const location=khola.Location;
     const created=khola.createdAt;
+    const updated=khola.updatedAt;
     //testing
     console.log("khola created on :",created);
     console.log("khola name :",kholaName);
@@ -128,7 +129,7 @@ let finalReport=[];
 try{
    
     //number of months
-     const numberOfmonths=getNumberOfMonths(new Date("October 14,2021"), new Date());
+     const numberOfmonths=getNumberOfMonths(created, new Date());
      const numberOfDays=getNumberOfDays(new Date("October 14,2021"), new Date());
 
      console.log(`number of months is ${numberOfmonths}`);
@@ -139,7 +140,7 @@ try{
                         beefVaccines.forEach(element => {
                             if(numberOfmonths<3){
                                 const totalDosage=element.Dosage*numberOfAnimals;
-                                if(element.AgeOfVaccination===">3"){
+                                if(element.AgeOfVaccination==="3"){
                                     finalReport.push({
                                         "Type":element.TypeOfVaccine,
                                         "Breed":element.Breed,
@@ -153,7 +154,7 @@ try{
                                         "status":"pending"
                             
                                     });
-                                }else if(element.AgeOfVaccination===">6"){
+                                }else if(element.AgeOfVaccination==="6"){
                                     finalReport.push({
                                         "Type":element.TypeOfVaccine,
                                         "Breed":element.Breed,

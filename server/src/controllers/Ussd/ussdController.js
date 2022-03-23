@@ -34,24 +34,30 @@ ussdController.post('/', async (req, res,next) => {
 if(text==="")
 {
  response='CON Enter your username'
-
 }
 if(text!=="")
 {
-  // let incoming=text.split('*');
-  // const username=incoming[0];
-  // const password=incoming[1];
-  // const user=Users.findOne({where:{username:username,password:password}});
-  // console.log(user);
-  console.log(`incomings ${incoming}`);
-response='CON enter your password'
+ let incoming=text.split('*');
+ console.log(incoming.length);
+  if(incoming.length===1){
+  response='CON enter your password'
+  }else if(incoming.length>1){
+      if(parseInt(incoming[1])>0){
+        response='END your username is '+incoming[0]+'\n Your password is '+incoming[1]
+      }
+  }else{
+    response='END error';
+  }
+
+
+// console.log(`incomings ${incoming}`);
 }
 
-// setTimeout(()=>{
-//   console.log(text);
-//   res.send(response);
-//   res.end();
-// },20000);
+setTimeout(()=>{
+  console.log(text);
+  res.send(response);
+  res.end();
+},2000);
    
   });
 
